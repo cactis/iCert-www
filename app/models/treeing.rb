@@ -1,0 +1,2 @@
+class Treeing < ApplicationRecord
+end
