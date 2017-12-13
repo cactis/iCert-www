@@ -8,6 +8,7 @@ class CreateCourses < ActiveRecord::Migration[5.1]
       t.datetime :start_date
       t.datetime :end_date
       t.string :aasm_state
+      t.text :settings
       t.timestamps
     end
   end

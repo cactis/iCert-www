@@ -1,18 +1,24 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  # def self.all
-  #   (1...20).map{|index| seed_params index }
-  # end
-  # attr_accessor :alert
 
-  # def alert=(value)
-  #   @alert = value
-  # end
+  # aasm :logger => Rails.logger do; end
+  def pri_button
 
-  # def alert
-  #   @alert
-  # end
+  end
+
+  def next_event
+    respond_to?("aasm") ? state = aasm.current_state : nil
+  end
+
+  def log_event_at!
+    update_attribute "#{aasm.current_event.to_s.gsub('!', '')}_at", Time.now
+  end
+
+  def after_state
+    state = aasm.current_state
+  end
+
 
   def self.seed!(index = 0)
     create! seed_params(index)

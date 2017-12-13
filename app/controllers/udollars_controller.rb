@@ -3,49 +3,48 @@ class UdollarsController < ApplicationController
 
   # GET /udollars
   def index
-    @udollars = Udollar.all
-
-    render json: @udollars
+    resources = Udollar.all
+    render json: resources
   end
 
   # GET /udollars/1
   def show
-    render json: @udollar
+    render json: resource
   end
 
   # POST /udollars
   def create
-    @udollar = Udollar.new(udollar_params)
+    resource = Udollar.new(udollar_params)
 
-    if @udollar.save
-      render json: @udollar, status: :created, location: @udollar
+    if resource.save
+      render json: resource, status: :created, location: resource
     else
-      render json: @udollar.errors, status: :unprocessable_entity
+      render json: resource.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /udollars/1
   def update
-    if @udollar.update(udollar_params)
-      render json: @udollar
+    if resource.update(udollar_params)
+      render json: resource
     else
-      render json: @udollar.errors, status: :unprocessable_entity
+      render json: resource.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /udollars/1
   def destroy
-    @udollar.destroy
+    resource.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_udollar
-      @udollar = Udollar.find(params[:id])
+      resource = Udollar.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def udollar_params
       params.fetch(:udollar, {})
     end
-end
+  end

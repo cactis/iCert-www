@@ -3,13 +3,7 @@ class CertsController < ApplicationController
 
 
   def index
-    #@certs = Cert.all
-    #render json: @certs
-    render json: {
-      draft: Cert.draft.map{|cert| CertSerializer.new(cert)},
-      unconfirmed: Cert.unconfirmed.map{|cert| CertSerializer.new(cert)},
-      confirmed: Cert.confirmed.map{|cert| CertSerializer.new(cert)},
-    }
+    render json: all_aasm_state
   end
 
   def confirm!

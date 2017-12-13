@@ -3,14 +3,44 @@ class Test < User
   def self.run
     reset_data!
 
-
+    # user = User.seed!
     # 一門結束課程
-    cert = Cert.first
-    cert.course.finish!
+    course = Course.seed!
+
+    cert = course.cert
+    course.finish!
     # Cert.first.confirm!
 
-    cert = Cert.second
     cert.course.finish!
+
+    paper = cert.papers.create!
+
+    paper = cert.papers.create!
+    paper.pay!
+
+    paper = cert.papers.create!
+    paper.pay!
+    paper.printout!
+
+    paper = cert.papers.create!
+    paper.pay!
+    paper.printout!
+    paper.deliver!
+
+    paper = cert.papers.create!
+    paper.pay!
+    paper.printout!
+    paper.deliver!
+    paper.receive!
+
+    paper = cert.papers.create!
+    paper.pay!
+    paper.printout!
+    paper.deliver!
+    paper.receive!
+    paper.rate!
+
+
     # Cert.second.confirm!
     # cert.print!
 
@@ -23,12 +53,12 @@ class Test < User
     Udollar.destroy_all
 
     User.destroy_all
-    3.times.each do |index|
+    1.times.each do |index|
       User.seed! index
     end
 
     Course.destroy_all
-    20.times.each do |index|
+    5.times.each do |index|
       Course.seed! index
     end
 

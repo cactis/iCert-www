@@ -6,6 +6,15 @@ class ApplicationController < ActionController::API
   before_action :log_request
   before_action :log_params
 
+  def all_aasm_state
+    json = {}
+    resource_class.aasm.states.each do |state|
+      json[state.name] = eval("#{resource_class.name}.#{state}").map{|item| eval("#{resource_class}Serializer.new(item)")}
+    end
+    json
+  end
+
+
   def authorization_token
   end
 

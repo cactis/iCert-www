@@ -6,12 +6,21 @@ Rails.application.routes.draw do
 
   scope :path => "/api" do
     post "/subscribe", to: "courses#index"
+    resources :papers do
+      member do
+        Paper.aasm.events.each do |event|
+          ev = event.name.to_s
+          eval("post '" + ev + "!', to: '" + "papers#" + ev +"!'")
+        end
+      end
+    end
     resources :courses do
       member do
         put "go"
       end
     end
     resources :certs do
+      resources :papers
       member do
         post 'confirm!', to: "certs#confirm!"
       end

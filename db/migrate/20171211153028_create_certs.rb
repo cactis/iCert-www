@@ -6,6 +6,7 @@ class CreateCerts < ActiveRecord::Migration[5.1]
       t.string :title
       t.datetime :expired_date
       t.string :aasm_state
+      t.text :settings
       t.timestamps
     end
   end

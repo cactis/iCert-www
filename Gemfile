@@ -20,7 +20,7 @@ gem 'redis'
 
 gem 'factory_bot'
 gem 'test_dummy'
-
+gem 'activerecord-typedstore'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'

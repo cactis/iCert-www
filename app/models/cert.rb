@@ -6,9 +6,9 @@ class Cert < ApplicationRecord
 
   belongs_to :user
   belongs_to :course
+  has_many :papers, dependent: :destroy
 
   include AASM
-
   aasm :logger => Rails.logger do
 
     state :draft, initial: true
@@ -22,13 +22,13 @@ class Cert < ApplicationRecord
   end
 
   def after_state
-    log aasm.current_state, 'aasm.current_state'
-    case aasm.current_state
+    super
+    case state
     when :unconfirmed
-      User.first.push!({title: "課程已結束囉", body: "本結業證書由證書組核發中。"}, {state: "unconfirmed"})
+      User.first.push!({title: "課程已結束囉", body: "本結業證書由證書組核發中。"}, {state: state})
     when :confirmed
       # !!!!! 加入發 UD 的程序
-      User.first.push!({title: "證書發下來囉", body: "本結業證書已由證書組核發到您的帳戶。並提供 2 元 Udallor 基金以便申請列印之用。"}, {state: "confirmed"})
+      User.first.push!({title: "證書發下來囉", body: "本結業證書已由證書組核發到您的帳戶。並提供 2 元 Udallor 基金以便申請列印之用。"}, {state: state})
     end
   end
 
