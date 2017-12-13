@@ -4,6 +4,15 @@ class ApplicationRecord < ActiveRecord::Base
   # def self.all
   #   (1...20).map{|index| seed_params index }
   # end
+  # attr_accessor :alert
+
+  # def alert=(value)
+  #   @alert = value
+  # end
+
+  # def alert
+  #   @alert
+  # end
 
   def self.seed!(index = 0)
     create! seed_params(index)

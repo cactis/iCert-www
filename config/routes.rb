@@ -6,8 +6,16 @@ Rails.application.routes.draw do
 
   scope :path => "/api" do
     post "/subscribe", to: "courses#index"
-    resources :courses
-    resources :certs
+    resources :courses do
+      member do
+        put "go"
+      end
+    end
+    resources :certs do
+      member do
+        post 'confirm!', to: "certs#confirm!"
+      end
+    end
     resources :udollars
   end
 end

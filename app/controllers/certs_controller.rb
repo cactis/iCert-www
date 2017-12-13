@@ -1,7 +1,7 @@
 class CertsController < ApplicationController
   before_action :set_cert, only: [:show, :update, :destroy]
 
-  
+
   def index
     #@certs = Cert.all
     #render json: @certs
@@ -12,15 +12,18 @@ class CertsController < ApplicationController
     }
   end
 
-  # GET /certs/1
+  def confirm!
+    resource.confirm!
+    render json: resource
+  end
+
   def show
     render json: @cert
   end
 
-  # POST /certs
+
   def create
     @cert = Cert.new(cert_params)
-
     if @cert.save
       render json: @cert, status: :created, location: @cert
     else
@@ -28,7 +31,7 @@ class CertsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /certs/1
+
   def update
     if @cert.update(cert_params)
       render json: @cert
@@ -52,4 +55,4 @@ class CertsController < ApplicationController
     def cert_params
       params.fetch(:cert, {})
     end
-end
+  end

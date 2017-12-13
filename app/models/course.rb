@@ -7,9 +7,9 @@ class Course < ApplicationRecord
     hours = [20, 40, 60, 80, 100, 120, 200, 300].sample
     {
       title: Faker::Educator.course,
-      has_cert: [true, false].sample,
+      has_cert: [true, true, true, true].sample,
       hours: hours,
-      percentage: (10..100).to_a.sample,
+      percentage: (9...10).to_a.map{|i| i * 10}.sample,
       start_date: date,
       end_date: date + 10
     }
@@ -30,8 +30,21 @@ class Course < ApplicationRecord
   end
 
   def certs_publish!
-    certs.each do |cert|
-      cert.publish!
+    log certs, 'certs'
+    if certs.present?
+      certs.each do |cert|
+        cert.ready_to_confirm!
+      end
+    else
+      User.first.push!({title: "課程已結束囉", body: "本課程沒有結業證書。感謝您認真參與本課程研習。"})
+    end
+  end
+
+  def plus!
+    if percentage < 100
+      update(percentage: percentage + 10)
+    else
+      certs_publish!
     end
   end
 

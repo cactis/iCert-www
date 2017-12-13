@@ -10,14 +10,26 @@ class Cert < ApplicationRecord
   include AASM
 
   aasm :logger => Rails.logger do
-    state :draft, initial: true
-    state :unconfirmed
-    state :confirmed
-    state :gettable, :printed
 
-    event :publish do; transitions from: :draft, to: :unconfirmed; end
-    event :confirm do; transitions from: :unconfirmed, to: :confirmed; end
+    state :draft, initial: true
+    state :unconfirmed, after_enter: :after_state
+    state :confirmed, after_enter: :after_state
+    # state :gettable, :printed
+
+    event :ready_to_confirm do; transitions from: [:draft, :unconfirmed, :confirmed], to: :unconfirmed; end
+    event :confirm do; transitions from: [:unconfirmed, :confirmed], to: :confirmed; end
     # event :print, after_event: :after_print do; transitions from: :gettable, to: :printed; end
+  end
+
+  def after_state
+    log aasm.current_state, 'aasm.current_state'
+    case aasm.current_state
+    when :unconfirmed
+      User.first.push!({title: "課程已結束囉", body: "本結業證書由證書組核發中。"}, {state: "unconfirmed"})
+    when :confirmed
+      # !!!!! 加入發 UD 的程序
+      User.first.push!({title: "證書發下來囉", body: "本結業證書已由證書組核發到您的帳戶。並提供 2 元 Udallor 基金以便申請列印之用。"}, {state: "confirmed"})
+    end
   end
 
   def after_print

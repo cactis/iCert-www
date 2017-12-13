@@ -7,10 +7,11 @@ class Test < User
     # 一門結束課程
     cert = Cert.first
     cert.course.finish!
+    # Cert.first.confirm!
 
     cert = Cert.second
     cert.course.finish!
-    Cert.second.confirm!
+    # Cert.second.confirm!
     # cert.print!
 
     # cert = Cert.second
@@ -27,7 +28,7 @@ class Test < User
     end
 
     Course.destroy_all
-    10.times.each do |index|
+    20.times.each do |index|
       Course.seed! index
     end
 

@@ -1,51 +1,54 @@
+# encoding: utf-8
 class CoursesController < ApplicationController
-  before_action :set_course, only: [:show, :update, :destroy]
+  # before_action :set_course, only: [:show, :update, :destroy, :go]
 
   # GET /courses
   def index
-    @courses = Course.all
-
-    render json: @courses
+    # alert "abc已完成中文abc"
+    resources = Course.all
+    render json: resources
   end
 
   # GET /courses/1
   def show
-    render json: @course
+    render json: resource
   end
 
   # POST /courses
   def create
-    @course = Course.new(course_params)
-
-    if @course.save
-      render json: @course, status: :created, location: @course
+    resource = Course.new(course_params)
+    if resource.save
+      render json: resource, status: :created, location: resource
     else
-      render json: @course.errors, status: :unprocessable_entity
+      render json: resource.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /courses/1
   def update
-    if @course.update(course_params)
-      render json: @course
+    if resource.update(course_params)
+      render json: resource
     else
-      render json: @course.errors, status: :unprocessable_entity
+      render json: resource.errors, status: :unprocessable_entity
     end
   end
 
-  # DELETE /courses/1
+  def go
+    resource.plus!
+    render json: resource
+  end
+
   def destroy
-    @course.destroy
+    resource.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_course
-      @course = Course.find(params[:id])
-    end
+    # def set_course
+    #   resource = Course.find(params[:id])
+    # end
 
     # Only allow a trusted parameter "white list" through.
     def course_params
       params.fetch(:course, {})
     end
-end
+  end
