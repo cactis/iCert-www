@@ -7,6 +7,7 @@ class Cert < ApplicationRecord
   belongs_to :user
   belongs_to :course
   has_many :papers, dependent: :destroy
+  has_many :udollars, foreign_key: "payable_id", foreign_type: "payable_type", dependent: :destroy
 
   include AASM
   aasm :logger => Rails.logger do
@@ -28,18 +29,18 @@ class Cert < ApplicationRecord
       User.first.push!({title: "課程已結束囉", body: "本結業證書由證書組核發中。"}, {state: state})
     when :confirmed
       # !!!!! 加入發 UD 的程序
-      User.first.push!({title: "證書發下來囉", body: "本結業證書已由證書組核發到您的帳戶。並提供 2 元 Udallor 基金以便申請列印之用。"}, {state: state})
+      Udollar.after_cert_created!(self)
     end
   end
 
-  def after_print
-    payment = -2
-    Udollar.create payment: payment, balance: Udollar.balance + payment, title: "申請輸出 #{record.title} 正本", message: "申請正本輸出，扣 #{payment} 元"
-  end
+  # def after_print
+  #   payment = -2
+  #   Udollar.create payment: payment, balance: Udollar.balance + payment, title: "申請輸出 #{record.title} 正本", message: "申請正本輸出，扣 #{payment} 元"
+  # end
 
   after_create do |record|
-    payment = 2
-    Udollar.create payment: payment, balance: Udollar.balance + payment, title: "獲得 #{record.title}", message: "每獲得一張結業證書，就獲得 #{payment} 元 UDollar。可用於後續紙本印刷"
+    # payment = 2
+    # Udollar.create payable: record, payment: payment, balance: Udollar.balance + payment, title: "獲得 #{record.title}", message: "每獲得一張結業證書，就獲得 #{payment} 元 UDollar。可用於後續紙本印刷"
   end
 
   def status
@@ -47,7 +48,7 @@ class Cert < ApplicationRecord
     when :draft
       "尚未結業"
     when :unconfirmed
-      "審核中"
+      "核發通過"
     when :confirmed
       "已核發"
     end

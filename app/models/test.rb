@@ -5,40 +5,40 @@ class Test < User
 
     # user = User.seed!
     # 一門結束課程
-    course = Course.seed!
+    # course = Course.seed!
+    # course.finish!
 
-    cert = course.cert
-    course.finish!
+    # cert = course.cert
     # Cert.first.confirm!
 
-    cert.course.finish!
+    # cert.course.finish!
 
-    paper = cert.papers.create!
+    # paper = cert.papers.create!
 
-    paper = cert.papers.create!
-    paper.pay!
+    # paper = cert.papers.create!
+    # paper.pay!
 
-    paper = cert.papers.create!
-    paper.pay!
-    paper.printout!
+    # paper = cert.papers.create!
+    # paper.pay!
+    # paper.printout!
 
-    paper = cert.papers.create!
-    paper.pay!
-    paper.printout!
-    paper.deliver!
+    # paper = cert.papers.create!
+    # paper.pay!
+    # paper.printout!
+    # paper.deliver!
 
-    paper = cert.papers.create!
-    paper.pay!
-    paper.printout!
-    paper.deliver!
-    paper.receive!
+    # paper = cert.papers.create!
+    # paper.pay!
+    # paper.printout!
+    # paper.deliver!
+    # paper.receive!
 
-    paper = cert.papers.create!
-    paper.pay!
-    paper.printout!
-    paper.deliver!
-    paper.receive!
-    paper.rate!
+    # paper = cert.papers.create!
+    # paper.pay!
+    # paper.printout!
+    # paper.deliver!
+    # paper.receive!
+    # paper.rate!
 
 
     # Cert.second.confirm!
@@ -58,7 +58,7 @@ class Test < User
     end
 
     Course.destroy_all
-    5.times.each do |index|
+    0.times.each do |index|
       Course.seed! index
     end
 

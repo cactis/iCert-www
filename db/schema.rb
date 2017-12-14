@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212044600) do
+ActiveRecord::Schema.define(version: 20171213115421) do
 
   create_table "certs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20171212044600) do
     t.string "title"
     t.datetime "expired_date"
     t.string "aasm_state"
+    t.text "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_certs_on_course_id"
@@ -32,8 +33,20 @@ ActiveRecord::Schema.define(version: 20171212044600) do
     t.datetime "start_date"
     t.datetime "end_date"
     t.string "aasm_state"
+    t.text "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "papers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "user_id"
+    t.bigint "cert_id"
+    t.string "aasm_state"
+    t.text "settings"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cert_id"], name: "index_papers_on_cert_id"
+    t.index ["user_id"], name: "index_papers_on_user_id"
   end
 
   create_table "rpush_apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -92,7 +105,6 @@ ActiveRecord::Schema.define(version: 20171212044600) do
     t.string "category"
     t.boolean "content_available", default: false
     t.text "notification"
-    t.index ["app_id", "delivered", "failed", "deliver_after"], name: "index_rapns_notifications_multi"
     t.index ["delivered", "failed"], name: "index_rpush_notifications_multi"
   end
 
@@ -138,12 +150,17 @@ ActiveRecord::Schema.define(version: 20171212044600) do
 
   create_table "udollars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "user_id"
+    t.string "payable_type"
+    t.bigint "payable_id"
     t.integer "payment"
     t.integer "balance", default: 0
     t.string "title"
     t.string "message"
+    t.string "aasm_state"
+    t.text "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["payable_type", "payable_id"], name: "index_udollars_on_payable_type_and_payable_id"
     t.index ["user_id"], name: "index_udollars_on_user_id"
   end
 
@@ -160,10 +177,11 @@ ActiveRecord::Schema.define(version: 20171212044600) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
+    t.string "aasm_state"
+    t.text "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-end

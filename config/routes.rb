@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       end
     end
     resources :courses do
+      collection do
+        post "reset"
+      end
       member do
         put "go"
       end

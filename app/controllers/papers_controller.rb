@@ -17,6 +17,15 @@ class PapersController < ApplicationController
     end
   end
 
+  def pay! 
+    begin 
+      resource.pay!
+      render json: resource
+    rescue => e
+      render_error_message e, :unprocessable_entity
+    end
+  end
+
 
 
   # POST /papers

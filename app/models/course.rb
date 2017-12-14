@@ -7,9 +7,9 @@ class Course < ApplicationRecord
     hours = [20, 40, 60, 80, 100, 120, 200, 300].sample
     {
       title: Faker::Educator.course,
-      has_cert: [true, true, true, false].sample,
+      has_cert: [true, true, false].sample,
       hours: hours,
-      percentage: (9...10).to_a.map{|i| i * 10}.sample,
+      percentage: (5...9).to_a.map{|i| i * 10}.sample,
       start_date: date,
       end_date: date + 10
     }

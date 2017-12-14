@@ -35,6 +35,11 @@ class ApplicationController < ActionController::API
     # resource.alert = message
   end
 
+  def render_error_message(e, status = 400)
+    render json: { alert: e.message.gsub(": ", ":\n").gsub(", ", "\n")}, status: status
+  end
+
+
   protected
   def configure_charsets
     # alert "中文測試abc"

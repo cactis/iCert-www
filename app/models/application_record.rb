@@ -3,9 +3,8 @@ class ApplicationRecord < ActiveRecord::Base
 
 
   # aasm :logger => Rails.logger do; end
-  def pri_button
-
-  end
+  def pri_button; end
+  def sub_button; end
 
   def next_event
     respond_to?("aasm") ? state = aasm.current_state : nil

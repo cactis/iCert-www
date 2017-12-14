@@ -16,7 +16,7 @@ class CoursesController < ApplicationController
 
   # POST /courses
   def create
-    resource = Course.new(course_params)
+    resource = Course.seed!
     if resource.save
       render json: resource, status: :created, location: resource
     else
@@ -39,6 +39,11 @@ class CoursesController < ApplicationController
 
   def destroy
     resource.destroy
+  end
+
+  def reset
+    Course.destroy_all
+    log Udollar.count
   end
 
   private
