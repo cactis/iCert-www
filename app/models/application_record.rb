@@ -11,7 +11,7 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def log_event_at!
-    update_attribute "#{aasm.current_event.to_s.gsub('!', '')}_at", Time.now
+    update_attribute "#{aasm.current_event.to_s.gsub('!', '')}_at", Time.now.utc
   end
 
   def after_state

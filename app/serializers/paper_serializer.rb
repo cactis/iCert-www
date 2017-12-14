@@ -1,4 +1,4 @@
 class PaperSerializer < BaseSerializer
-  # attributes :cert
+  attributes :receive_at
   has_one :cert
 end
