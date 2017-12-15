@@ -18,8 +18,6 @@ class Course < ApplicationRecord
   after_create do |record|
     if has_cert
       cert = record.certs.create! Cert.seed_params
-      log cert, 'cert'
-      log cert.course, 'course'
     end
   end
 

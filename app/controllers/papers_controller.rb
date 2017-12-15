@@ -1,5 +1,31 @@
 class PapersController < ApplicationController
 
+  def new
+    if cert = Cert.find_by_qrcode_token(params[:token])
+      log cert, 'cert'
+      if cert.qrcode_token_at > Time.now - 30.minutes
+        cert.papers.create!
+        # respond_to do |format|
+        #   format.html: {js: "abrr"}
+        #   format.json: cert.papers.create!
+        # end
+        log 111
+        alert = "<script>alert('請求成功。您將收到推播訊息，引導您到 iCert 付款。')</script>"
+        render js: alert
+        # respond_to do |format|
+        #   format.html { render :js => alert }
+        #   format.js   { render :js => alert }
+        # end
+        return
+      end
+    end
+    title = "本條碼已過期。"
+    body = "請在產生列印條碼後， 3 分鐘內在證照印刷機掃描完成。"
+    state = ""
+    render json: title
+    User.first.push!({title: title, body: body}, {state: "unpaid"})
+  end
+
   def index
     render json: all_aasm_state
   end
@@ -17,16 +43,14 @@ class PapersController < ApplicationController
     end
   end
 
-  def pay! 
-    begin 
+  def pay!
+    begin
       resource.pay!
       render json: resource
     rescue => e
       render_error_message e, :unprocessable_entity
     end
   end
-
-
 
   # POST /papers
   def create

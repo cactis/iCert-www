@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :assets
   resources :treeings
   resources :trees
   devise_for :users
@@ -23,9 +24,13 @@ Rails.application.routes.draw do
       end
     end
     resources :certs do
-      resources :papers
       member do
         post 'confirm!', to: "certs#confirm!"
+        get 'qrcode', to: "certs#qrcode"
+      end
+      resources :papers do
+        # member do
+        get 'new', to: 'papers#new', on: :collection
       end
     end
     resources :udollars
