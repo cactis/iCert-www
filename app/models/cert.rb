@@ -10,7 +10,7 @@ class Cert < ApplicationRecord
   end
 
   def qrcode_token!
-    if update_attributes!({qrcode_token_at: Time.new, qrcode_token: get_unique_token})
+    if update_attributes!({qrcode_token_at: Time.now, qrcode_token: get_unique_token})
       # log (open "http://icert.airfont.com/api/certs/4/papers/new?token=#{self.qrcode_token}")
       qrcode_token
     end

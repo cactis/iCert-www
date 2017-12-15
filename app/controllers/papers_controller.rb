@@ -3,7 +3,9 @@ class PapersController < ApplicationController
   def new
     if cert = Cert.find_by_qrcode_token(params[:token])
       log cert, 'cert'
-      if cert.qrcode_token_at > Time.now - 30.minutes
+      checktime = Time.now - 3.minutes
+      log cert.qrcode_token_at,  checktime
+      if cert.qrcode_token_at > checktime
         cert.papers.create!
         # respond_to do |format|
         #   format.html: {js: "abrr"}
