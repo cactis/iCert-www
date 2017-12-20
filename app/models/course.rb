@@ -9,7 +9,7 @@ class Course < ApplicationRecord
       title: Faker::Educator.course,
       has_cert: [true, true, false].sample,
       hours: hours,
-      percentage: (5...9).to_a.map{|i| i * 10}.sample,
+      percentage: (8...9).to_a.map{|i| i * 10}.sample,
       start_date: date,
       end_date: date + 10
     }

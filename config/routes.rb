@@ -9,6 +9,9 @@ Rails.application.routes.draw do
     post "/subscribe", to: "courses#index"
     resources :papers do
       member do
+        post 'pay_by_code!', to: 'papers#pay_by_code!'
+        get 'qrcode', to: 'papers#qrcode'
+        get 'download', to: 'papers#download'
         Paper.aasm.events.each do |event|
           ev = event.name.to_s
           eval("post '" + ev + "!', to: '" + "papers#" + ev +"!'")

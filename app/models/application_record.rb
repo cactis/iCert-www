@@ -1,7 +1,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-
+  default_scope { order("id desc") }
   # aasm :logger => Rails.logger do; end
   def pri_button; end
   def sub_button; end

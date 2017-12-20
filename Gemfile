@@ -16,6 +16,7 @@ gem 'devise'
 gem 'aasm'
 
 gem 'rpush'
+gem 'rpush-redis'
 gem 'redis'
 
 gem 'factory_bot'

@@ -4,17 +4,22 @@ include ActionView::Helpers::DateHelper
 
 class Cert < ApplicationRecord
 
-  typed_store :settings do |s|
+  typed_store :settings do |t|
     # s.string :qrcode_token
     # s.datetime :qrcode_token_at
   end
 
   def qrcode_token!
     if update_attributes!({qrcode_token_at: Time.now, qrcode_token: get_unique_token})
-      # log (open "http://icert.airfont.com/api/certs/4/papers/new?token=#{self.qrcode_token}")
-      qrcode_token
+      log (open "http://icert.airfont.com/api#{request_code_url}")
+      return qrcode_token
     end
   end
+
+  def request_code_url
+    "/certs/#{self.id}/papers/new?token=#{self.qrcode_token}"
+  end
+
 
   def get_unique_token
     loop do

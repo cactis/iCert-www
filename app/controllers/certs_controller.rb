@@ -2,7 +2,8 @@ class CertsController < ApplicationController
   before_action :set_cert, only: [:show, :update, :destroy]
 
   def qrcode
-    render json: {token: resource.qrcode_token! }
+    resource.qrcode_token!
+    render json: resource
   end
 
   def index

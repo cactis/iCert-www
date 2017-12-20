@@ -18,12 +18,14 @@ class User < ApplicationRecord
 
   def push!(message = {title: "title", body: "body"}, data = {})
     devices = [
-      # "33a52d6009d1e2551f82ffe79f74a9f800646c2a170e5df0d133384a4567e2d5",
+      #{ }"c1e79203a5b0b37d2f8789bf246c27a9f6f162c4e45bb1a325d59eb9d7332557", # PL
+      #{ }"33a52d6009d1e2551f82ffe79f74a9f800646c2a170e5df0d133384a4567e2d5", #YJ
       "b82805c6e6cee77557fe8e7e4fc6b496be3f2972899ae2ce616c02457659a0cf"
     ]
     devices.each do |device|
       n = Rpush::Apns::Notification.new
-      n.app = Rpush::Apns::App.find_by_name("icert")
+      # n.app = Rpush::Apns::App.find_by_name("icert")
+      n.app = Rpush::Apns::App.where(name: 'icert').first
       # n.device_token = "b82805c6e6cee77557fe8e7e4fc6b496be3f2972899ae2ce616c02457659a0cf"
       # n.device_token "33a52d6009d1e2551f82ffe79f74a9f800646c2a170e5df0d133384a4567e2d5"
       n.device_token = device
@@ -31,7 +33,9 @@ class User < ApplicationRecord
       n.sound = "default"
       n.data = data
       n.save!
+      # Rpush.embed
     end
+    # Rpush.push
   end
 
 

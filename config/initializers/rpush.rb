@@ -1,13 +1,13 @@
 Rpush.configure do |config|
 
   # Supported clients are :active_record, :redis and :mongoid
-  config.client = :active_record
-
+  # config.client = :active_record
+  config.client = :redis
   # Options passed to Redis.new
   # config.redis_options = {}
 
   # Frequency in seconds to check for new notifications.
-  config.push_poll = 2
+  config.push_poll = 5
 
   # The maximum number of notifications to load from the store every `push_poll` seconds.
   # If some notifications are still enqueued internally, Rpush will load the batch_size less
@@ -30,10 +30,11 @@ Rpush.configure do |config|
   # config.apns.feedback_receiver.frequency = 60
 
 
-  if ActiveRecord::Base.connection.data_source_exists?('rpush_apps') && !Rpush::Apns::App.find_by_name('icert')
-    app = Rpush::Apns::App.new
-    app.name = "icert"
-    app.certificate = File.read("#{Rails.root}/config/certificates/dev.pem")
+  # if ActiveRecord::Base.connection.data_source_exists?('rpush_apps') && !Rpush::Apns::App.find_by_name('icert')
+  if ActiveRecord::Base.connection.data_source_exists?('rpush_apps') && !Rpush::Apns::App.where(name: 'icert').first
+  app = Rpush::Apns::App.new
+  app.name = "icert"
+  app.certificate = File.read("#{Rails.root}/config/certificates/dev.pem")
     app.environment = "development" # APNs environment.
     app.password = "sce1234"
     app.connections = 1
@@ -146,8 +147,8 @@ end
 
 if defined?(Rails)
   ActiveSupport.on_load(:after_initialize) do
-    Rpush.embed
-  end
+  Rpush.embed
+end
 else
   Rpush.embed
 end

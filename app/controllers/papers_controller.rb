@@ -1,12 +1,13 @@
 class PapersController < ApplicationController
 
   def new
+    limit = 3
     if cert = Cert.find_by_qrcode_token(params[:token])
       log cert, 'cert'
-      checktime = Time.now - 3.minutes
+      checktime = Time.now - limit.minutes
       log cert.qrcode_token_at,  checktime
       if cert.qrcode_token_at > checktime
-        cert.papers.create!
+        cert.papers.create!(request_by_code: true)
         # respond_to do |format|
         #   format.html: {js: "abrr"}
         #   format.json: cert.papers.create!
@@ -22,7 +23,7 @@ class PapersController < ApplicationController
       end
     end
     title = "本條碼已過期。"
-    body = "請在產生列印條碼後， 3 分鐘內在證照印刷機掃描完成。"
+    body = "請在產生列印條碼後， #{limit} 分鐘內在證照印刷機掃描完成。"
     state = ""
     render json: title
     User.first.push!({title: title, body: body}, {state: "unpaid"})
@@ -43,6 +44,25 @@ class PapersController < ApplicationController
       resource.send "#{event.name.to_s}!"
       render json: resource
     end
+  end
+
+  def pay_by_code!
+    resource.paid_code!
+    # log resource, 'resource'
+    render json: resource
+  end
+
+  def qrcode
+    render json: resource
+  end
+
+  def download
+    alert = "請稍候。<script>alert('印證機輸出中，請注意機台指示。列印完成後，會有推播指引下一步驟。')</script>"
+    render js: alert
+    resource.printout!
+    resource.deliver!
+    resource.receive!
+    # render pdf: resource
   end
 
   def pay!
