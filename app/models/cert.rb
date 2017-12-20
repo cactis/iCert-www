@@ -76,7 +76,7 @@ class Cert < ApplicationRecord
   def status
     case aasm.current_state
     when :draft
-      "尚未結業"
+      "課程進行中 #{course.percentage} %"
     when :unconfirmed
       "核發通過"
     when :confirmed
