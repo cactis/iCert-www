@@ -2,14 +2,17 @@ class Test < User
 
   def self.run
     reset_data!
-
-    # user = User.seed!
+    user = User.seed!
     # 一門結束課程
-    # course = Course.seed!
-    # course.finish!
+    5.times.each do
+        course = Course.seed!
+        course.finish!
 
-    # cert = course.cert
-    # Cert.first.confirm!
+        if cert = course.cert
+            cert.confirm!
+        end
+        # exit if cert
+    end
 
     # cert.course.finish!
 
@@ -46,23 +49,25 @@ class Test < User
 
     # cert = Cert.second
     # cert.confirm!
-  end
+end
 
-  def self.reset_data!
+def self.reset_data!
     # Cert.destroy_all
-    Udollar.destroy_all
 
     User.destroy_all
-    1.times.each do |index|
-      User.seed! index
-    end
 
-    Course.destroy_all
-    0.times.each do |index|
+    Udollar.destroy_all
+
+  #   1.times.each do |index|
+  #     User.seed! index
+  # end
+
+  Course.destroy_all
+  0.times.each do |index|
       Course.seed! index
-    end
-
-
   end
+
+
+end
 
 end

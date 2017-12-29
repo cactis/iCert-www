@@ -14,14 +14,17 @@ gem 'puma'#, '~> 3.7'
 gem 'devise'
 
 gem 'aasm'
-
 gem 'rpush'
 gem 'rpush-redis'
 gem 'redis'
+gem 'activerecord-typedstore'
+gem 'active_model_serializers'
+gem 'carrierwave'
 
 gem 'factory_bot'
 gem 'test_dummy'
-gem 'activerecord-typedstore'
+
+gem 'mini_magick'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
@@ -29,10 +32,8 @@ gem 'activerecord-typedstore'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'active_model_serializers'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-gem 'carrierwave'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'

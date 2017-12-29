@@ -20,6 +20,8 @@ class Course < ApplicationRecord
     if has_cert
       cert = record.certs.create! Cert.seed_params
       body = "本課程結業時會有一張結業證書哦。"
+      # record.finish!
+      # cert.confirm!
     end
     User.first.push!({title: "歡迎參加本課程研習", body: body})
   end

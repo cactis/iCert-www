@@ -47,9 +47,12 @@ class PapersController < ApplicationController
   end
 
   def pay_by_code!
-    resource.paid_code!
-    # log resource, 'resource'
-    render json: resource
+    begin
+      resource.paid_code!
+      render json: resource
+    rescue => e
+      render_error_message e
+    end
   end
 
   def qrcode

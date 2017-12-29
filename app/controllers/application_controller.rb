@@ -2,7 +2,6 @@
 require "awesome_print"
 class ApplicationController < ActionController::API
   before_action :configure_charsets
-
   before_action :log_request
   before_action :log_params
 
@@ -39,10 +38,8 @@ class ApplicationController < ActionController::API
     render json: { alert: e.message.gsub(": ", ":\n").gsub(", ", "\n")}, status: status
   end
 
-
   protected
   def configure_charsets
-    # alert "中文測試abc"
     headers["Content-Type"] = "text/html; charset=UTF-8"
   end
 
