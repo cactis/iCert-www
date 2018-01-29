@@ -1,3 +1,4 @@
-host: http://icert.airfont.com
+# host: http://icert.airfont.com
+host: http://140.137.207.47
 loading: /images/loading.png
 avatar: /images/loading.png

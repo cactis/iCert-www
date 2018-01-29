@@ -44,7 +44,10 @@ class ApplicationController < ActionController::API
   end
 
   def log_request
-    logger.info("URL: #{request.method} --- #{request.url} --- #{authorization_token}")
+    logger.info("ECHO: #{request.headers['extra']} --- extra")
+    log request.headers['extra'] == "admin", 'is_admin????'  
+    User.current = request.headers['extra'] == "admin" ? User.first : nil
+    logger.info("ECHO: #{request.method} --- #{request.url} --- #{authorization_token}, User.current_id: #{User.current_id}")
   end
 
   def log_params

@@ -5,11 +5,22 @@ default: &default
   username: root
   password: <%= ENV["DATABASE_PASSWORD"] %>
   socket: /tmp/mysql.sock
+  host: 140.137.207.47
+  database: icert_production
+  # password: icert1234
+  # host: localhost
+  # host: icert.airfont.com
+  socket: /var/run/mysqld/mysqld.sock
+  password: icert1234
+
 
 development:
   <<: *default
-  database: icert_development
-  host: icert.airfont.com
+  # database: icert_development
+  # socket: /var/run/mysqld/mysqld.sock
+  # database: icert_production
+  # socket: /var/run/mysqld/mysqld.sock
+  password: icert1234
 
 test:
   <<: *default
@@ -17,6 +28,7 @@ test:
 
 production:
   <<: *default
-  database: icert_production
-  username: root
+  # database: icert_production
+  socket: /var/run/mysqld/mysqld.sock
+  password: icert1234
   # password: <%= ENV['ICERT_DATABASE_PASSWORD'] %>

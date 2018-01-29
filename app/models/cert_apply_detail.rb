@@ -1,0 +1,2 @@
+class CertApplyDetail < ApplicationRecord
+end

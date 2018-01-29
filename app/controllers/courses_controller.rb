@@ -5,7 +5,8 @@ class CoursesController < ApplicationController
   # GET /courses
   def index
     # alert "abc已完成中文abc"
-    resources = Course.all
+    resources = Course.page(params[:page])
+    # resources = CertDetail.page(params[:page])
     render json: resources
   end
 

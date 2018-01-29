@@ -1,5 +1,5 @@
   # ActiveModelSerializers.config.adapter = :attributes
-  # ActiveModelSerializers.config.key_transform = :camel_lower
+  ActiveModelSerializers.config.key_transform = :underscore
   # ActiveModelSerializers.config.adapter = :json
   # ActiveModelSerializers.config.adapter = :json_api
   # ActiveModelSerializers.config.serializer_lookup_enabled = false

@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   devise_for :users
 
   scope :path => "/api" do
+    resources :cert_apply_details
+    resources :cert_applies
+    resources :cert_details
     post "/subscribe", to: "courses#index"
     resources :papers do
       member do

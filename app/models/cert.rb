@@ -4,6 +4,7 @@ include ActionView::Helpers::DateHelper
 
 class Cert < ApplicationRecord
 
+
   typed_store :settings do |t|
     # s.string :qrcode_token
     # s.datetime :qrcode_token_at
@@ -11,7 +12,7 @@ class Cert < ApplicationRecord
 
   def qrcode_token!
     if update_attributes!({qrcode_token_at: Time.now, qrcode_token: get_unique_token})
-      log (open "http://icert.airfont.com/api#{request_code_url}")
+      log (open "#{Settings.host}/api#{request_code_url}")
       return qrcode_token
     end
   end
@@ -28,6 +29,20 @@ class Cert < ApplicationRecord
     end
   end
 
+  def info
+    # "<html><head>"
+    # "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" \
+    # "<style>body{padding: 1em}th{align:right; width: 30%}td{width: 50%} img{max-wdith: 100%; height: auto; margin: 1em; display: block}</style>" \
+    # "</head>" \
+    # "<body>" \
+    "<table>" \
+    "<tr><th>證書發行單位:</th><td>中國文化大學</td></tr>" \
+    "<tr><th>ICERT 平台 SSL 憑證:</th><td>#{get_unique_token}</td></tr>" \
+    "<tr><th>ICERT 區塊鏈編號:</th><td>#{get_unique_token}</td></tr>" \
+    "</table>" \
+    # "<img src='https://i.imgur.com/J35lG4U.jpg'/>" \
+    # "</body></html>"
+  end
 
   belongs_to :user
   belongs_to :course
@@ -67,30 +82,28 @@ class Cert < ApplicationRecord
     photos.first
   end
 
-  # def after_print
-  #   payment = -2
-  #   Udollar.create payment: payment, balance: Udollar.balance + payment, title: "申請輸出 #{record.title} 正本", message: "申請正本輸出，扣 #{payment} 元"
-  # end
-
   after_create do |record|
-    # payment = 2
-    # Udollar.create payable: record, payment: payment, balance: Udollar.balance + payment, title: "獲得 #{record.title}", message: "每獲得一張結業證書，就獲得 #{payment} 元 UDollar。可用於後續紙本印刷"
     photos.seed!
   end
 
   def status
+    # log User.is_admin?, "User.is_admin?: #{User.count}"
     case aasm.current_state
     when :draft
-      "課程進行中 #{course.percentage} %"
+      "課程進行中 #{course.percentage} %" if User.is_admin?
     when :unconfirmed
-      "核發通過"
+      "核發通過" if User.is_admin?
     when :confirmed
       "已核發"
     end
   end
 
   def expired_info
-    expired_date ? "#{time_ago_in_words expired_date} 到期" : "永久有效"
+    if User.is_admin?
+      expired_date ? "到期日: #{time_ago_in_words expired_date} 到期" : "永久有效"
+    else
+      expired_date ? "到期日: #{time_ago_in_words expired_date} 到期\n課程進行中 #{course.percentage} %" : "永久有效"
+    end
   end
 
   def self.seed!(index = 0)
@@ -115,3 +128,26 @@ class Cert < ApplicationRecord
   end
 
 end
+
+# == Schema Information
+#
+# Table name: certs
+#
+#  id              :integer          not null, primary key
+#  user_id         :integer
+#  course_id       :integer
+#  title           :string(255)
+#  expired_date    :datetime
+#  aasm_state      :string(255)
+#  qrcode_token    :string(255)
+#  qrcode_token_at :datetime
+#  settings        :text(65535)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+# Indexes
+#
+#  index_certs_on_course_id     (course_id)
+#  index_certs_on_qrcode_token  (qrcode_token)
+#  index_certs_on_user_id       (user_id)
+#

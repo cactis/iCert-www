@@ -1,0 +1,2 @@
+class CertApplySerializer < DefaultSerializer
+end

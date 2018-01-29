@@ -1,0 +1,3 @@
+class CertDetailSerializer < DefaultSerializer
+  
+end
