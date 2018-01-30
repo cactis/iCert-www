@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
   def all_aasm_state
     json = {}
     resource_class.aasm.states.each do |state|
+      log state.name, 'state.name'
       json[state.name] = eval("#{resource_class.name}.#{state}").map{|item| eval("#{resource_class}Serializer.new(item)")}
     end
     json

@@ -33,6 +33,8 @@ Rails.application.routes.draw do
       member do
         post 'confirm!', to: "certs#confirm!"
         get 'qrcode', to: "certs#qrcode"
+        get 'paper', to: 'certs/paper'
+        get 'html', to: 'certs/html'
       end
       resources :papers do
         # member do

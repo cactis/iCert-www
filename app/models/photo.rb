@@ -1,4 +1,5 @@
-class Photo < Image
+class Photo < Picture
+
   def cert_id=(value)
     self.assetable_id = value
     self.assetable_type = "Cert"

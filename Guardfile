@@ -14,6 +14,7 @@ guard :shell do
 
   }
   # watch(%r{config/*}) { `ssh airfont.com "touch ~/www/icert/tmp/restart.txt"` }
-  watch(%r{config/*}) { `ssh ctslin@140.137.207.47 "touch ~/www/icert/tmp/restart.txt"` }
   # watch(%r{Gemfile}) { `ssh airfont.com "cd ~/www/icert; bundle install"` }
+  watch(%r{config/*}) { `ssh ctslin@140.137.207.47 "touch ~/www/icert/tmp/restart.txt"` }
+  watch(%r{Gemfile}) { `ssh ctslin@140.137.207.47 "cd ~/www/icert; bundle install"` }
 end

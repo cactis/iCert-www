@@ -4,11 +4,18 @@ class Test < User
         Course.destroy_all
         Cert.destroy_all
 
-        CertDetail.limit(20).each do |data|
+        limit = 20
+        CertDetail.limit(limit).each_with_index do |data, index|
           params = Course.seed_params 
           params[:title] = data.CLAS_NAME 
           ap params
-          Course.create(params)
+          course = Course.create(params)
+          if index < limit / 2
+          course.finish!
+          if cert = course.cert
+            cert.confirm!
+          end
+        end
         end
         "end"
     end

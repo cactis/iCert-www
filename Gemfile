@@ -13,6 +13,11 @@ gem 'mysql2', '0.4.8'#, '>= 0.3.18', '< 0.5'
 gem 'puma'#, '~> 3.7'
 gem 'devise'
 
+gem 'wkhtmltoimage-binary'
+gem 'imgkit'
+
+gem 'rmagick', :require => 'rmagick'
+
 gem 'aasm'
 gem 'rpush'
 gem 'rpush-redis'

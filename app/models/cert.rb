@@ -1,9 +1,73 @@
 require 'action_view'
 require 'action_view/helpers'
+
+# require 'rmagick'
+require 'rmagick'
+include Magick
+
+
 include ActionView::Helpers::DateHelper
 
 class Cert < ApplicationRecord
 
+  def self.generate_photos!
+    all.each {|c| c.generate_photo! }
+  end
+
+  def photo
+    # if photos.count > 0 
+    #   photos.destroy_all 
+    # end
+    generate_photo! if photos.count == 0
+    # { file_url: paper_url, thumb_url: paper_url }
+    # , html_url: html_url }
+    photos.first
+  end
+
+  def paper_url  
+    "#{Settings.host}/api/certs/#{id}/paper"
+  end
+
+  def theme
+    template = %w(CCB5.png GCB5.png GTA4.png).sample
+    # template = %w(CCB5.png GCB5.png GTA4.png).first
+    "#{Rails.root}/db/seeds/#{template}"
+  end
+
+  def generate_photo!
+    photos.destroy_all
+    # kit = IMGKit.new(html)
+    # kit.to_file "#{Rails.root}/public/cert.jpg"
+     img = ImageList.new(theme)
+    # smallcat = cat.minify
+    # smallcat.display    
+    watermark = Image.new(600, 50) do |c|
+      c.background_color= "Transparent"
+    end
+
+    watermark_text = Draw.new
+    watermark_text.annotate(watermark, 0,0,0,0, title) do
+      watermark_text.gravity = CenterGravity
+      self.fill = 'Black'
+      self.pointsize = 30
+      self.font_family = "cwTeXKai"
+      self.font_weight = BoldWeight
+      self.stroke = "none"
+    end
+    img.composite!(watermark, CenterGravity, 0, -100,HardLightCompositeOp)               #Bottom-Right Marking
+
+    img.write temp_file
+    photos.create(remote_file_url: temp_file_url)
+    log photos.first.file_url
+  end
+
+  def temp_file    
+    "#{Rails.root}/public/uploads/cert.jpg"    
+  end
+
+  def temp_file_url 
+    "#{Settings.host}/uploads/cert.jpg"    
+  end
 
   typed_store :settings do |t|
     # s.string :qrcode_token
@@ -78,12 +142,9 @@ class Cert < ApplicationRecord
     end
   end
 
-  def photo
-    photos.first
-  end
-
   after_create do |record|
-    photos.seed!
+    # photos.seed!
+    generate_photo!
   end
 
   def status
