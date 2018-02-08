@@ -1,9 +1,35 @@
 
 class CertDetail < ApplicationRecord
 
+  default_scope { order("id desc") }
+
+  has_many :courses
+
   def self.import(records = CertDetail.limit(10))
     records.each do
+    end
+  end
 
+  # after_update do |record|
+  #   record.courses.each do |course|
+  #     course.update_attribnutes!({STUD_NAME: record.STUD_NAME})
+  #   end
+  #   CourseTemplate.first.certs.each do |cert|
+  #     cert.generate_photo!
+  #   end
+  #   # CourseTemplate.first.certs.each do |cert|
+  #   #   cert.generate_photo!
+  #   # end
+  # end
+
+  def BIRTH
+    log self[:BIRTH].to_s, 'birth111'
+    if t1 = self[:BIRTH].to_s
+      if t2 = t1.split(' ')[0]
+        if t = t2.split('-')
+          "中華民國#{t[0].to_i - 1911}年#{t[1]}月#{t[2]}日"
+        end
+      end
     end
   end
 

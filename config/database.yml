@@ -13,6 +13,9 @@ default: &default
   socket: /var/run/mysqld/mysqld.sock
   password: icert1234
 
+  socket: /tmp/mysql.sock
+  host: localhost
+  password: <%= ENV['DATABASE_PASSWORD'] %>
 
 development:
   <<: *default
@@ -21,9 +24,6 @@ development:
   # database: icert_production
   # socket: /var/run/mysqld/mysqld.sock
 
-  # socket: /tmp/mysql.sock
-  # host: localhost
-  # password: <%= ENV['DATABASE_PASSWORD'] %>
 
 test:
   <<: *default

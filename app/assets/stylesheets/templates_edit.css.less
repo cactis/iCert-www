@@ -1,15 +1,44 @@
 a {
-  color: red;
+  color: #412277;
 }
 
-#editor, #preview, #canvas {
+#canvas {
+  width: 200px;
+  height: 1000px;
+  // float: right;
+  position: relative;
+  top: 0;
+  left: 20px;
+  // float: left;
+  // right: 0;
+  // bottom: 0;
+  // width: 600px;
+}
+
+#input{
+  display: block;
+  margin: 0.5em 0;
+  font-size: 1em;
+  padding: 5px;
+  font-family: Arial;
+  // width: 30em;
+}
+
+#templates-switch {
+  float: right;
+}
+
+#editor, #preview {
   // width: 400px;
   // height: 400px;
-  border: 1px solid #333;
+  border: 1px solid #ddd;
   display: inline-block;
 }
 #preview {
   // display: none;
+  visibility: hidden;
+  position: fixed;
+
 }
 #editor {
   .text {

@@ -6,6 +6,9 @@
     %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0" }
 
     %title= content_for?(:title) ? yield(:title) : "Untitled"
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    / <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" >
+
 
     = Gon::Base.render_data
     = stylesheet_link_tag "application"
@@ -13,7 +16,7 @@
     = include_controller_action_stylesheet
     // = javascript_include_tag 'https://localhost:35729/livereload.js'
 
-    = javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+    = javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"
     = javascript_include_tag "application"#, "data-turbolinks-track" => true
     = csrf_meta_tag
 

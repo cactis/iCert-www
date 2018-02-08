@@ -14,8 +14,9 @@ class TemplatesController < ActionController::Base
   end
 
   def edit
+    @templates = Template.page(1)
     gon.template = @template
-    gon.cert_detail = CertDetail.seed
+    gon.cert_detail = CertDetail.first
     gon.course = Course.first
     gon.fonts = Settings.fonts
   end

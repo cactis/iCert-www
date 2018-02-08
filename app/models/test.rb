@@ -8,7 +8,8 @@ class Test < User
   def self.export(cert = Cert.first, tempfile)
     template = Template.first
     # cert = Cert.first
-    course = cert.course
+    # course = cert.course
+    cert_detail = cert.course.cert_detail
     svg = template.data
     svg.gsub!('/seeds/', '/home/ctslin/www/icert/public/seeds/')
 
@@ -17,12 +18,14 @@ class Test < User
     texts.each do |text|
       express = text.text
       log express, 'express 111'
-      course.settings.each do |key, value|
-        # log [key, value]
+      # course.settings.each do |key, value|
+      cert_detail.attributes.each do |key, value|
+        log [key, value]
         field = '#{' + key + '}'
-        express.gsub!(field, value.to_s)
+        # express.gsub!(field, value.to_s)
+        express.gsub!(field, eval("cert_detail.#{key}").to_s)
       end
-      size = 30
+      size = 22
       log express, 'express 222'
       result = express.scan(/.{1,#{size}}/)
       log result, 'result'
@@ -232,48 +235,49 @@ def self.run
       user = User.seed!
     end
 
-    3.times.each do
-      Template.seed!
-    end
+    # 3.times.each do
+    #   Template.seed!
+    # end
 
     limit = 5
-    CertDetail.limit(limit).each_with_index do |data, index|
-      params = Course.seed_params
-      params[:title] = data.CLAS_NAME
-      params[:CLAS_ID] = data.CLAS_ID
-      params[:STUD_ID] = data.STUD_ID
-      params[:STUD_NO] = data.STUD_NO
-      params[:STUD_NAME] = data.STUD_NAME
-      params[:ITEM_NO] = data.ITEM_NO
-      params[:ITEM_NAME] = data.ITEM_NAME
-      params[:CLAS_NAME] = data.CLAS_NAME
-      params[:CLAS_SERIAL] = data.CLAS_SERIAL
-      params[:ITEM_POINT] = data.ITEM_POINT
-      params[:MASTER_NO] = data.MASTER_NO
-      params[:CLS_POINTS] = data.CLS_POINTS
-      params[:ENG_NAME] = data.ENG_NAME
-      params[:STUD_ENGNAME] = data.STUD_ENGNAME
-      params[:BIRTH] = data.BIRTH
-      params[:SEX] = data.SEX
-      params[:CLAS_ENGNAME] = data.CLAS_ENGNAME
-      params[:BUDG_MONTH] = data.BUDG_MONTH
-      params[:BUDG_YEAR] = data.BUDG_YEAR
-      params[:BUDG_ACTUOPENDATE] = data.BUDG_ACTUOPENDATE
-      params[:CLAS_WORD] = data.CLAS_WORD
-      params[:CLAS_ENDDATE] = data.CLAS_ENDDATE
-      params[:SNO] = data.SNO
-      params[:ABS_HOUR] = data.ABS_HOUR
-      params[:BUDG_TOTALHOURS] = data.BUDG_TOTALHOURS
-      params[:BUDG_HOURCOUNT] = data.BUDG_HOURCOUNT
-      params[:GRP_SNO] = data.GRP_SNO
-      params[:scls_id] = data.scls_id
-      params[:MEMO] = data.MEMO
-      params[:REQUIRED] = data.REQUIRED
-      params[:TERM] = data.TERM
-      params[:OPEN_DATE] = data.OPEN_DATE
-      params[:END_DATE] = data.END_DATE
-      params[:OUT_SNO] = data.OUT_SNO
-      params[:GRAD_SIGN] = data.GRAD_SIGN
+    CertDetail.limit(limit).each_with_index do |cert_detail, index|
+      params = cert_detail.courses.seed_params
+      params[:cert_detail_id] = cert_detail.id
+      params[:title] = cert_detail.CLAS_NAME
+      params[:CLAS_ID] = cert_detail.CLAS_ID
+      params[:STUD_ID] = cert_detail.STUD_ID
+      params[:STUD_NO] = cert_detail.STUD_NO
+      params[:STUD_NAME] = cert_detail.STUD_NAME
+      params[:ITEM_NO] = cert_detail.ITEM_NO
+      params[:ITEM_NAME] = cert_detail.ITEM_NAME
+      params[:CLAS_NAME] = cert_detail.CLAS_NAME
+      params[:CLAS_SERIAL] = cert_detail.CLAS_SERIAL
+      params[:ITEM_POINT] = cert_detail.ITEM_POINT
+      params[:MASTER_NO] = cert_detail.MASTER_NO
+      params[:CLS_POINTS] = cert_detail.CLS_POINTS
+      params[:ENG_NAME] = cert_detail.ENG_NAME
+      params[:STUD_ENGNAME] = cert_detail.STUD_ENGNAME
+      params[:BIRTH] = cert_detail.BIRTH
+      params[:SEX] = cert_detail.SEX
+      params[:CLAS_ENGNAME] = cert_detail.CLAS_ENGNAME
+      params[:BUDG_MONTH] = cert_detail.BUDG_MONTH
+      params[:BUDG_YEAR] = cert_detail.BUDG_YEAR
+      params[:BUDG_ACTUOPENDATE] = cert_detail.BUDG_ACTUOPENDATE
+      params[:CLAS_WORD] = cert_detail.CLAS_WORD
+      params[:CLAS_ENDDATE] = cert_detail.CLAS_ENDDATE
+      params[:SNO] = cert_detail.SNO
+      params[:ABS_HOUR] = cert_detail.ABS_HOUR
+      params[:BUDG_TOTALHOURS] = cert_detail.BUDG_TOTALHOURS
+      params[:BUDG_HOURCOUNT] = cert_detail.BUDG_HOURCOUNT
+      params[:GRP_SNO] = cert_detail.GRP_SNO
+      params[:scls_id] = cert_detail.scls_id
+      params[:MEMO] = cert_detail.MEMO
+      params[:REQUIRED] = cert_detail.REQUIRED
+      params[:TERM] = cert_detail.TERM
+      params[:OPEN_DATE] = cert_detail.OPEN_DATE
+      params[:END_DATE] = cert_detail.END_DATE
+      params[:OUT_SNO] = cert_detail.OUT_SNO
+      params[:GRAD_SIGN] = cert_detail.GRAD_SIGN
 
       course = Course.create(params)
       if index < limit / 2

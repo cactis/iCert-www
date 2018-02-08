@@ -1,7 +1,7 @@
 Rails.application.config.assets.paths << Rails.root.join("vendor")
 
 Rails.application.config.assets.precompile += %w( templates.css templates_edit.css templates_new.css )
-Rails.application.config.assets.precompile += %w( templates.js templates_edit.js templates_new.js )
+Rails.application.config.assets.precompile += %w( templates.js templates_edit.js templates_new.js  canvg.js/canvg.js canvg.js/rgbcolor.js canvg.js/StackBlur.js)
 
 precompiles = []
 precompiles += %w(new edit show index).map{ |action|

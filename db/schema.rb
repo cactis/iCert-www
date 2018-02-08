@@ -132,6 +132,7 @@ ActiveRecord::Schema.define(version: 20180201074932) do
   end
 
   create_table "courses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "cert_detail_id"
     t.string "title"
     t.boolean "has_cert"
     t.integer "hours"
@@ -142,6 +143,7 @@ ActiveRecord::Schema.define(version: 20180201074932) do
     t.text "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cert_detail_id"], name: "index_courses_on_cert_detail_id"
   end
 
   create_table "papers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

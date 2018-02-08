@@ -4,6 +4,9 @@ class CertDetailsController < ActionController::Base
   layout "application"
 
   def index
+    # if name = params[:name]
+    #   CertDetail.first.update_attributes!(STUD_NAME: name)
+    # end
     @cert_details = CertDetail.page(params[:page])
     render json: {callback: "(Any url you want to callback)", result: Cert.limit(10).map{|cert| CertSerializer.new(cert)}, data: @cert_details}
   end
