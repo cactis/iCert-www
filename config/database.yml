@@ -4,7 +4,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password: <%= ENV["DATABASE_PASSWORD"] %>
-  socket: /tmp/mysql.sock
+  # socket: /tmp/mysql.sock
   host: 140.137.207.47
   database: icert_production
   # password: icert1234
@@ -20,10 +20,16 @@ development:
   # socket: /var/run/mysqld/mysqld.sock
   # database: icert_production
   # socket: /var/run/mysqld/mysqld.sock
-  password: icert1234
+
+  # socket: /tmp/mysql.sock
+  # host: localhost
+  # password: <%= ENV['DATABASE_PASSWORD'] %>
 
 test:
   <<: *default
+  # socket: /tmp/mysql.sock
+  # host: localhost
+  # password: <%= ENV['DATABASE_PASSWORD'] %>
   database: icert_test
 
 production:

@@ -1,0 +1,23 @@
+!!! 5
+%html{ :lang => "en" }
+  %head
+    %meta{ :charset => "utf-8" }
+
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0" }
+
+    %title= content_for?(:title) ? yield(:title) : "Untitled"
+
+    = Gon::Base.render_data
+    = stylesheet_link_tag "application"
+    = include_controller_stylesheet
+    = include_controller_action_stylesheet
+    // = javascript_include_tag 'https://localhost:35729/livereload.js'
+
+    = javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+    = javascript_include_tag "application"#, "data-turbolinks-track" => true
+    = csrf_meta_tag
+
+  %body
+    = yield
+    = include_controller_javascript
+    = include_controller_action_javascript

@@ -1,13 +1,17 @@
 class Course < ApplicationRecord
 
-  has_many :certs, dependent: :destroy
+  # has_many :certs, dependent: :destroy
+  has_many :course_users, dependent: :destroy
+  has_many :certs, through: :course_users
+  has_many :course_templates, dependent: :destroy
+  has_many :course_subjects, dependent: :destroy
 
   def self.seed_params(index = 0)
     date = Time.now + [-10, -20, -3, 5, 10, 30].sample
     hours = [20, 40, 60, 80, 100, 120, 200, 300].sample
     {
       title: Faker::Educator.course,
-      has_cert: [true, true, false].sample,
+      has_cert: true, #[true, true, false].sample,
       hours: hours,
       percentage: (8...9).to_a.map{|i| i * 10}.sample,
       start_date: date,
@@ -15,14 +19,52 @@ class Course < ApplicationRecord
     }
   end
 
+  typed_store :settings do |t|
+    t.string :CLAS_ID
+    t.string :STUD_ID
+    t.integer :STUD_NO
+    t.string :STUD_NAME
+    t.string :ITEM_NO
+    t.string :ITEM_NAME
+    t.string :CLAS_NAME
+    t.integer :CLAS_SERIAL
+    t.decimal :ITEM_POINT
+    t.string :MASTER_NO
+    t.string :CLS_POINTS
+    t.string :ENG_NAME
+    t.string :STUD_ENGNAME
+    t.datetime :BIRTH
+    t.string :SEX
+    t.string :CLAS_ENGNAME
+    t.integer :BUDG_MONTH
+    t.integer :BUDG_YEAR
+    t.datetime :BUDG_ACTUOPENDATE
+    t.string :CLAS_WORD
+    t.datetime :CLAS_ENDDATE
+    t.integer :SNO
+    t.integer :ABS_HOUR
+    t.decimal :BUDG_TOTALHOURS
+    t.decimal :BUDG_HOURCOUNT
+    t.integer :GRP_SNO
+    t.string :scls_id
+    t.string :MEMO
+    t.string :REQUIRED
+    t.string :TERM
+    t.datetime :OPEN_DATE
+    t.datetime :END_DATE
+    t.string :OUT_SNO
+    t.string :GRAD_SIGN
+  end
+
   after_create do |record|
-    body = "本課程沒有結業證書。"
-    if has_cert
-      cert = record.certs.create! Cert.seed_params
-      body = "本課程結業時會有一張結業證書哦。"
-      # record.finish!
-      # cert.confirm!
-    end
+
+    course_template = record.course_templates.new
+    course_template.template = Template.first
+    course_template.save
+
+    course_user = record.course_users.new
+    course_user.user = User.first
+    course_user.save
     # User.first.push!({title: "歡迎參加本課程研習", body: body})
   end
 

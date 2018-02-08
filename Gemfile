@@ -16,7 +16,25 @@ gem 'devise'
 gem 'wkhtmltoimage-binary'
 gem 'imgkit'
 
+gem 'gon'
+
+
+gem 'simple_form'
+gem 'foundation-rails'
+gem 'execjs'
+gem 'therubyracer'
+
+gem 'underscore-rails'
+
+
+gem 'jquery-rails'
+# gem 'turbolinks'
+
+gem 'coffee-rails'
+gem 'less-rails'
+
 gem 'rmagick', :require => 'rmagick'
+gem "mini_magick"
 
 gem 'aasm'
 gem 'rpush'
@@ -56,13 +74,22 @@ group :development, :test do
 end
 
 group :development do
+
+  gem 'seed_dump'
+
   gem 'guard-shell'
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   # gem 'spring'
   # gem 'spring-watcher-listen', '~> 2.0.0'
+  # gem 'guard-livereload'#, '~> 2.5', require: false
+  gem 'guard-livereload', '~> 2.5', require: false
+  gem "rack-livereload"
+
 end
 gem 'awesome_print'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'rails-erd', require: false, group: :development

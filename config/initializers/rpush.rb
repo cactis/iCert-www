@@ -145,10 +145,12 @@ Rpush.reflect do |on|
   # end
 end
 
-if defined?(Rails)
-  ActiveSupport.on_load(:after_initialize) do
+unless `hostname` == "MBPR15.local\n"
+  if defined?(Rails)
+    ActiveSupport.on_load(:after_initialize) do
+      Rpush.embed
+    end
+  else
     Rpush.embed
   end
-else
-  Rpush.embed
 end

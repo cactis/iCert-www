@@ -1,0 +1,29 @@
+<script type="text/javascript" src="https://canvg.github.io/canvg/rgbcolor.js"></script>
+<script type="text/javascript" src="https://canvg.github.io/canvg/StackBlur.js"></script>
+<script type="text/javascript" src="https://canvg.github.io/canvg/canvg.js"></script>
+
+%h1= link_to "證書編輯器"
+= link_to "儲存樣版", '#', class: 'button', id: 'saveBtn'
+= link_to "清除", '#', class: 'button', id: 'clearBtn'
+= link_to "套印輸出", '#', id: 'exportBtn'
+<a href="#" download="證書.png" onclick="this.href=canvas.toDataURL();" >證書下載</a>
+%ul#img-templates
+  %li
+    %img.template{src: "/seeds/CCB5.png"}
+  %li
+    %img.template{src: "/seeds/GCB5.png"}
+  %li
+    %img.template{src: "/seeds/GTA4.png"}
+%ul#fonts
+  - Settings.fonts.names.each_with_index do |name, index|
+    %li.clickable.font{rel: name}= Settings.fonts.labels[index]
+%ul
+  - CertDetail.attribute_names.each do |field|
+    %li.column.field.clickable(id= field)= field
+  %li.label.column.clickable 學分證明書
+  %li.label.column.clickable 結業證書
+#editor
+<canvas id="canvas" width="800px" height="800px"></canvas>
+#preview
+
+/ # = link_to "create", new_template_path

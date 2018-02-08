@@ -2,6 +2,13 @@ class CertsController < ApplicationController
   before_action :set_cert, only: [:html, :show, :update, :destroy]
   respond_to :json, :html
 
+
+  def new
+    log Cert.seed
+    # render json: Cert.seed, serializer: CertNewSerializer
+    render json: Cert.new_seed
+  end
+
   def qrcode
     resource.qrcode_token!
     render json: resource
@@ -15,13 +22,18 @@ class CertsController < ApplicationController
     send_file resource.file, type: "image/jpeg", disposition: "inline"
   end
 
-  # def html    
+  # def html
   #   render json: resource.html
   # end
 
   def confirm!
     resource.confirm!
     render json: resource
+  end
+
+  def demo
+    resource = Cert.demo
+    render json: resource, serializer: CertDemoSerializer
   end
 
   def show

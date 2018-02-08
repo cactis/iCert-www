@@ -1,0 +1,10 @@
+%h1 新增證書範本
+
+= simple_form_for @template do |f|
+  = f.error_notification
+  .form-inputs
+    = f.input :title
+  .form-actions
+    = f.button :submit
+
+= link_to 'Back', themes_path

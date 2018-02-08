@@ -6,18 +6,21 @@ end
 #
 # Table name: cert_applies
 #
+#  id              :integer          not null, primary key
 #  Apply_No        :integer
-#  Apply_Type      :string(1)
+#  Apply_Type      :string(255)
 #  Apply_DateTime  :datetime
-#  Apply_EmpNo     :string(10)
-#  Cert_TypeId     :string(5)
-#  Dflag           :string(1)
-#  Clas_Id         :string(10)
+#  Apply_EmpNo     :string(255)
+#  Cert_TypeId     :string(255)
+#  Dflag           :string(255)
+#  Clas_Id         :string(255)
 #  Cert_OrgNo      :integer
-#  Finished        :string(1)
+#  Finished        :string(255)
 #  Finish_DateTime :datetime
-#  Finish_Emp      :string(10)
-#  P_para          :string(200)
+#  Finish_Emp      :string(255)
+#  P_para          :string(255)
 #  Chk_DateTime    :datetime
-#  Chk_Emp         :string(20)
+#  Chk_Emp         :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #

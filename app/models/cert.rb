@@ -10,21 +10,47 @@ include ActionView::Helpers::DateHelper
 
 class Cert < ApplicationRecord
 
-  def self.generate_photos!
-    all.each {|c| c.generate_photo! }
+  belongs_to :course_template
+  belongs_to :course_user
+  delegate :user, to: :course_user
+  delegate :course, to: :course_user
+
+  has_many :papers, dependent: :destroy
+  has_many :udollars, foreign_key: "payable_id", foreign_type: "payable_type", dependent: :destroy
+
+  has_many :assets, as: :assetable, dependent: :destroy
+  has_many :photos, as: :assetable
+  accepts_nested_attributes_for :photos
+  # has_one :photo, as: :assetable, dependent: :destroy
+
+  def self.seed_params(index = 0)
+    course_user = CourseUser.seed!
+    {
+      course_user: course_user,
+      course_template: course_user.course.course_templates.seed!,
+      title: Faker::Coffee.blend_name,
+      expired_date: [Time.now + 3.year, nil].sample, #[(Time.now + 3.year).to_date, nil].sample
+    }
   end
 
+  # def self.generate_photos!
+  #   all.each {|c| c.generate_photo! }
+  # end
+
+  def self.demo
+    seed!
+  end
+
+  # def photo
+  # end
   def photo
-    # if photos.count > 0 
-    #   photos.destroy_all 
-    # end
-    generate_photo! if photos.count == 0
-    # { file_url: paper_url, thumb_url: paper_url }
-    # , html_url: html_url }
+    if photos.count == 0
+      generate_photo!
+    end
     photos.first
   end
 
-  def paper_url  
+  def paper_url
     "#{Settings.host}/api/certs/#{id}/paper"
   end
 
@@ -34,19 +60,35 @@ class Cert < ApplicationRecord
     "#{Rails.root}/db/seeds/#{template}"
   end
 
+  def sign; "#{Rails.root}/db/seeds/sign.png";end
+
+  def validate_url
+    "#{Settings.host}/certs/#{id}/validates"
+  end
+
+
   def generate_photo!
+    # photos.first ||
+    photos.destroy_all
+    photos.create!(remote_file_url: Test.export(self, temp_file))
+  end
+
+  def generate_photo___!
     photos.destroy_all
     # kit = IMGKit.new(html)
     # kit.to_file "#{Rails.root}/public/cert.jpg"
-     img = ImageList.new(theme)
+    sign_img = Magick::Image.read(sign).first
+
+    img = Magick::Image.read(theme).first
+    # img = ImageList.new(theme)
     # smallcat = cat.minify
-    # smallcat.display    
-    watermark = Image.new(600, 50) do |c|
+    # smallcat.display
+    watermark = Image.new(600, 200) do |c|
       c.background_color= "Transparent"
     end
 
     watermark_text = Draw.new
-    watermark_text.annotate(watermark, 0,0,0,0, title) do
+    watermark_text.annotate(watermark, 0,0,0,0, "#{course.ITEM_NAME} \n#{course.CLAS_NAME}\n#{course.STUD_ENGNAME}\n學分數:#{course.ITEM_POINT}\n授予: #{course.STUD_ID}") do
       watermark_text.gravity = CenterGravity
       self.fill = 'Black'
       self.pointsize = 30
@@ -54,24 +96,30 @@ class Cert < ApplicationRecord
       self.font_weight = BoldWeight
       self.stroke = "none"
     end
-    img.composite!(watermark, CenterGravity, 0, -100,HardLightCompositeOp)               #Bottom-Right Marking
+    # img.composite!(sign_img, CenterGravity, 0, 100, SoftLightCompositeOp)               #Bottom-Right Marking
+
+    img.composite!(sign_img, CenterGravity, 0, 100, HardLightCompositeOp)               #Bottom-Right Marking
+    img.composite!(watermark, CenterGravity, 0, -100, HardLightCompositeOp)               #Bottom-Right Marking
 
     img.write temp_file
     photos.create(remote_file_url: temp_file_url)
-    log photos.first.file_url
+    # log photos.first.file_url
+    # log
   end
 
-  def temp_file    
-    "#{Rails.root}/public/uploads/cert.jpg"    
+  def temp_file
+    "#{Rails.root}/public/uploads/cert.png"
   end
 
-  def temp_file_url 
-    "#{Settings.host}/uploads/cert.jpg"    
+  def temp_file_url
+    # "#{Settings.host}/uploads/cert.png"
+    temp_file.gsub!("#{Rails.root}/public", Settings.host)
   end
 
   typed_store :settings do |t|
     # s.string :qrcode_token
     # s.datetime :qrcode_token_at
+
   end
 
   def qrcode_token!
@@ -108,15 +156,7 @@ class Cert < ApplicationRecord
     # "</body></html>"
   end
 
-  belongs_to :user
-  belongs_to :course
-  has_many :papers, dependent: :destroy
-  has_many :udollars, foreign_key: "payable_id", foreign_type: "payable_type", dependent: :destroy
 
-  has_many :assets, as: :assetable, dependent: :destroy
-  has_many :photos, as: :assetable
-  accepts_nested_attributes_for :photos
-  # has_one :photo, as: :assetable, dependent: :destroy
 
   include AASM
   aasm :logger => Rails.logger do
@@ -142,10 +182,10 @@ class Cert < ApplicationRecord
     end
   end
 
-  after_create do |record|
-    # photos.seed!
-    generate_photo!
-  end
+  # after_create do |record|
+  #   # photos.seed!
+  #   generate_photo!
+  # end
 
   def status
     # log User.is_admin?, "User.is_admin?: #{User.count}"
@@ -167,26 +207,27 @@ class Cert < ApplicationRecord
     end
   end
 
-  def self.seed!(index = 0)
+  def self.seed!#(index = 0)
     cert = super
-    cert.photos.seed!
+    # cert.photos.seed!
   end
 
-  def self.seed_params(index = 0)
-    {
-      user: User.first,
-      title: Faker::Coffee.blend_name,
-      expired_date: [Time.now + 3.year, nil].sample, #[(Time.now + 3.year).to_date, nil].sample
-    }
-  end
+  # def self.new_seed
+  #   {
+  #     cert: {
+  #       course_user: CourseUser.seed
+  #     }
+  #   }
+  # end
 
-  before_create do |record|
-    record.title = course ? course.title : record.title
-  end
+  # before_create do |record|
+  #   record.title = course ? course.title : record.title
+  # end
 
   def title
-    "#{self[:title]} 結業證書"
-  end
+    course.title
+  #   "#{self[:title]} 結業證書"
+end
 
 end
 
@@ -194,21 +235,23 @@ end
 #
 # Table name: certs
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  course_id       :integer
-#  title           :string(255)
-#  expired_date    :datetime
-#  aasm_state      :string(255)
-#  qrcode_token    :string(255)
-#  qrcode_token_at :datetime
-#  settings        :text(65535)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                 :integer          not null, primary key
+#  course_user_id     :integer          not null
+#  course_template_id :integer          not null
+#  title              :string(255)
+#  expired_date       :datetime
+#  aasm_state         :string(255)
+#  qrcode_token       :string(255)
+#  qrcode_token_at    :datetime
+#  blockchain_token   :string(255)
+#  settings           :text(65535)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
 #
 # Indexes
 #
-#  index_certs_on_course_id     (course_id)
-#  index_certs_on_qrcode_token  (qrcode_token)
-#  index_certs_on_user_id       (user_id)
+#  index_certs_on_course_template_id                     (course_template_id)
+#  index_certs_on_course_template_id_and_course_user_id  (course_template_id,course_user_id) UNIQUE
+#  index_certs_on_course_user_id                         (course_user_id)
+#  index_certs_on_qrcode_token                           (qrcode_token)
 #

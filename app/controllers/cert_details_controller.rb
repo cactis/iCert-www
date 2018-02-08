@@ -1,27 +1,30 @@
-class CertDetailsController < ApplicationController
+class CertDetailsController < ActionController::Base
   before_action :set_cert_detail, only: [:show, :update, :destroy]
 
-  # GET /cert_details
-  def index
-    @cert_details = CertDetail.all
+  layout "application"
 
-    render json: @cert_details
+  def index
+    @cert_details = CertDetail.page(params[:page])
+    render json: {callback: "(Any url you want to callback)", result: Cert.limit(10).map{|cert| CertSerializer.new(cert)}, data: @cert_details}
   end
 
   # GET /cert_details/1
   def show
-    render json: @cert_detail
+    gon.resource = @cert_detail
+    # render json: @cert_detail
   end
 
   # POST /cert_details
   def create
-    @cert_detail = CertDetail.new(cert_detail_params)
+    @cert_details = CertDetail.page(params[:page])
+    render json: {result: Cert.limit(10).map{|cert| CertSerializer.new(cert)} }
+    # @cert_detail = CertDetail.new(cert_detail_params)
 
-    if @cert_detail.save
-      render json: @cert_detail, status: :created, location: @cert_detail
-    else
-      render json: @cert_detail.errors, status: :unprocessable_entity
-    end
+    # if @cert_detail.save
+    #   render json: @cert_detail, status: :created, location: @cert_detail
+    # else
+    #   render json: @cert_detail.errors, status: :unprocessable_entity
+    # end
   end
 
   # PATCH/PUT /cert_details/1
@@ -39,9 +42,11 @@ class CertDetailsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_cert_detail
-      @cert_detail = CertDetail.find(params[:id])
+      if @cert_detail = CertDetail.find_by_id(params[:id])
+      else
+        @cert_detail = CertDetail.seed
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

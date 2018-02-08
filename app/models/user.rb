@@ -2,7 +2,7 @@ class User < ApplicationRecord
   extend UserExtend
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  has_many :certs
+  # has_many :certs
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
@@ -11,10 +11,10 @@ class User < ApplicationRecord
     User.current_id == User.first.id
   end
 
-  def self.seed_params(index = 0)
+  def self.seed_params
     {
       name: Faker::Name.name,
-      email: "user#{index}@sce.pccu.edu.tw",
+      email: Faker::Internet.email,
       password: '12345678',
       password_confirmation: '12345678'
     }

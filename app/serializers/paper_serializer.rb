@@ -1,3 +1,8 @@
+class PaperSerializer < BaseSerializer
+  attributes :receive_at, :request_by_code, :paid_code_url
+  has_one :cert
+end
+
 # == Schema Information
 #
 # Table name: papers
@@ -24,8 +29,3 @@
 #  index_papers_on_paid_code  (paid_code)
 #  index_papers_on_user_id    (user_id)
 #
-
-class PaperSerializer < BaseSerializer
-  attributes :receive_at, :request_by_code, :paid_code_url
-  has_one :cert
-end

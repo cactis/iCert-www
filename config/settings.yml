@@ -2,3 +2,8 @@
 host: http://140.137.207.47
 loading: /images/loading.png
 avatar: /images/loading.png
+# fonts: "cwTeXKai, cwTeXYen, cwTeXFangSong, Noto Sans TC, cwTeXMing"
+fonts:
+  names: ["cwTeXKai", "cwTeXFangSong", "cwTeXMing", "cwTeXYen", "cwTeXHeiBold"]
+  labels: ["楷體", "仿宋體", "細明體", "圓體", "思源黑體", "文泉驛等寬微米黑"]
+

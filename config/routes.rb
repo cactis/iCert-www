@@ -1,11 +1,31 @@
 Rails.application.routes.draw do
 
+  resources :course_user_subjects
+  resources :course_subjects
+  resources :subjects
+  resources :course_users
+  resources :course_templates
+  resources :templates
+  resources :themes do
+    # get 'new', to: 'themes#new', on: :collection
+    # get 'edit', to: 'themes#edit'
+  end
   resources :assets
+  resources :certs do
+    member do
+      get :validates, to: "certs#show"
+    end
+  end
   resources :treeings
   resources :trees
   devise_for :users
 
   scope :path => "/api" do
+
+    resources :templates
+    resources :cert_details do
+      resources :templates
+    end
     resources :cert_apply_details
     resources :cert_applies
     resources :cert_details
@@ -30,7 +50,9 @@ Rails.application.routes.draw do
       end
     end
     resources :certs do
+      get 'demo', to: 'certs#demo', on: :collection
       member do
+        get 'new', to: "certsnew"
         post 'confirm!', to: "certs#confirm!"
         get 'qrcode', to: "certs#qrcode"
         get 'paper', to: 'certs/paper'

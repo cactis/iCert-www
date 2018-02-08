@@ -10,12 +10,10 @@ class CoursesController < ApplicationController
     render json: resources
   end
 
-  # GET /courses/1
   def show
     render json: resource
   end
 
-  # POST /courses
   def create
     resource = Course.seed!
     if resource.save
@@ -48,12 +46,6 @@ class CoursesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    # def set_course
-    #   resource = Course.find(params[:id])
-    # end
-
-    # Only allow a trusted parameter "white list" through.
     def course_params
       params.fetch(:course, {})
     end

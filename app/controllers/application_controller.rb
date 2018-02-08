@@ -27,7 +27,13 @@ class ApplicationController < ActionController::API
   def parent_id; routes[routes.rindex(controller_name) - 1].to_i; end
   def parent; parent_class ? parent_class.find(parent_id) : nil; end
   def resource_class; controller_name.classify.constantize; end
-  def resource; resource_class.find(params[:id]); end
+  def resource
+    # if r = resource_class.find(params[:id])
+    #   # gon.resource = r
+    # end
+    # r
+    resource_class.find(params[:id])
+  end
 
 
   def alert(message)
@@ -46,7 +52,7 @@ class ApplicationController < ActionController::API
 
   def log_request
     logger.info("ECHO: #{request.headers['extra']} --- extra")
-    log request.headers['extra'] == "admin", 'is_admin????'  
+    log request.headers['extra'] == "admin", 'is_admin????'
     User.current = request.headers['extra'] == "admin" ? User.first : nil
     logger.info("ECHO: #{request.method} --- #{request.url} --- #{authorization_token}, User.current_id: #{User.current_id}")
   end

@@ -18,9 +18,12 @@ class ApplicationRecord < ActiveRecord::Base
     state = aasm.current_state
   end
 
+  def self.seed
+    new seed_params
+  end
 
-  def self.seed!(index = 0)
-    create! seed_params(index)
+  def self.seed!#(index = 0)
+    create! seed_params#(index)
   end
 
   def state
