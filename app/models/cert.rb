@@ -149,8 +149,8 @@ class Cert < ApplicationRecord
     # "<body>" \
     "<table>" \
     "<tr><th>證書發行單位:</th><td>中國文化大學</td></tr>" \
-    "<tr><th>ICERT 平台 SSL 憑證:</th><td>#{get_unique_token}</td></tr>" \
-    "<tr><th>ICERT 區塊鏈編號:</th><td>#{get_unique_token}</td></tr>" \
+    "<tr><th>平台 SSL 憑證:</th><td>#{get_unique_token[0...16]} 【TWCA台灣認證】</td></tr>" \
+    "<tr><th>區塊鏈編號:</th><td>#{get_unique_token[0...16]} 【ICERT數位證書開放平台】</td></tr>" \
     "</table>" \
     # "<img src='https://i.imgur.com/J35lG4U.jpg'/>" \
     # "</body></html>"

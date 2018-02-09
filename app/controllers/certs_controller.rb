@@ -45,6 +45,7 @@ class CertsController < ApplicationController
     body = "<h1>#{resource.title}</h1>
     <img src='#{resource.photo.file_url}'/>
     #{resource.info}
+    <img src='http://ggg.com.tw/wp-content/uploads/2013/05/twca_ssl_big.png'/>
     "
     html = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>#{css}</style></head><body>#{body}</body></html>"
     render json: html
