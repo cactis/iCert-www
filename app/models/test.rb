@@ -13,7 +13,7 @@ class Test < User
     qrcode = RQRCode::QRCode.new(cert.validate_url)
     svg = qrcode.as_svg(offset: 0, color: '000',
       shape_rendering: 'crispEdges',
-      module_size: 5)
+      module_size: 11)
     # log svg, 'svg'
 
     png = qrcode.as_png(
@@ -21,9 +21,9 @@ class Test < User
           resize_exactly_to: false,
           fill: 'white',
           color: 'black',
-          size: 100,
+          size: 120,
           border_modules: 4,
-          module_px_size: 2,
+          module_px_size: 20,
           file: @@qrcode_file
           )
     # IO.write(@@qrcode_file, png.to_s)
