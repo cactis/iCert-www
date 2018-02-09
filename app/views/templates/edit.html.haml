@@ -29,13 +29,14 @@
 %ul#fonts
   - Settings.fonts.names.each_with_index do |name, index|
     %li.clickable.font{rel: name}= Settings.fonts.labels[index]
-%ul
+%ul#fields
   - CertDetail.attribute_names.each do |field|
     %li.column.field.clickable(id= field)= field
   %li.label.column.clickable 學分證明書
   %li.label.column.clickable 結業證書
 / <canvas id="canvas" width="800px" height="800px"></canvas>
 %textarea#input
+/ = link_to "新增自訂欄位", '#', id: "addCustomColumn"
 #editor
 %canvas#canvas
 #preview

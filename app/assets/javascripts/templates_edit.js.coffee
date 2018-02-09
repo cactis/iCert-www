@@ -36,7 +36,7 @@ $(document).ready ->
   bindExportBtn()
 
   bindFontsClick()
-  bindCustomColumn()
+  # bindCustomColumn()
 
   $input = $('#input')
   bindInputChange()
@@ -46,6 +46,7 @@ bindInputChange = ->
     return if !selected
     $.delay ->
       el = selected
+      # log el, 'el'
       deselectAll()
       if selected.text != $input.val()
         selected.text $input.val()
@@ -136,7 +137,7 @@ deselectAll = ->
   draw.select('.draggable')
     .removeClass selectedClass
     .selectize false
-  $('#input').val ""
+  # $('#input').val ""
 
 window.previewSVG = ->
   deselectAll()
@@ -177,19 +178,19 @@ bindSetTemplate = ->
         , 100, true
 
 
-bindCustomColumn = ->
-  $('#addCustomColumn').unbind().click ->
-    column = $('#input').val()
-    log column, 'column'
-    $('#fields').append "<li class='label column clickable'>#{column}</li>"
-    bindColumnAdd()
-    false
+# bindCustomColumn = ->
+#   $('#addCustomColumn').unbind().click ->
+#     column = $('#input').val()
+#     log column, 'column'
+#     $('#fields').append "<li class='label column clickable'>#{column}</li>"
+#     bindColumnAdd()
+#     false
 
 bindColumnAdd = ->
   # $('#editor').click ->
   #   deselectAll()
 
-  $('.column').unbind().dblclick ->
+  $('.column').unbind().click ->
     content = $(this).html()
     if $(this).hasClass 'label'
       size = 50
@@ -210,13 +211,13 @@ bindColumnAdd = ->
     textSelected text
     # saveTemplate()
     false
-  .click (e) ->
-    return if e.detail == 2
-    content = $(this).html()
-    if $(this).hasClass 'label'
-    else
-      content = "\#{#{content}}"
-    $('#input').val $('#input').val() + content
+  # .click (e) ->
+  #   return if e.detail == 2
+  #   content = $(this).html()
+  #   if $(this).hasClass 'label'
+  #   else
+  #     content = "\#{#{content}}"
+  #   $('#input').val $('#input').val() + content
 
 bindSaveBtn = ->
   $("#saveBtn").click ->
