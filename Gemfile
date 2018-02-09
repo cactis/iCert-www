@@ -18,7 +18,7 @@ gem 'imgkit'
 
 gem 'gon'
 
-
+gem 'rqrcode'
 gem 'simple_form'
 gem 'foundation-rails'
 gem 'execjs'

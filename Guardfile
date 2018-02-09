@@ -18,8 +18,11 @@ guard :shell do
   watch(%r{config/*}) { `ssh ctslin@140.137.207.47 "touch ~/www/icert/tmp/restart.txt"` }
   watch(%r{Gemfile}) { `ssh ctslin@140.137.207.47 "cd ~/www/icert; bundle install"` }
 
-  watch(%r{app/models/*}) { `bundle exec erd; mv erd.svg public/schema.svg;`}# open http://140.137.207.47/schema.svg` }
-  # watch(%r{app/models/test.*}) { reload!; Test.export(Cert.first, "#{Rails.root}/public/uploads/cert.png") }
+  # watch(%r{app/models/*}) { `bundle exec erd; mv erd.svg public/schema.svg;`}# open http://140.137.207.47/schema.svg` }
+
+  watch(%r{app/models/test.*}) { reload!; Test.export(Cert.first, "#{Rails.root}/public/uploads/cert.png") }
+  # watch(%r{app/models/test.*}) { Template.first.save }
+
 
   watch(%r{db/migrate/*}) { `rake db:migrate:reset; bundle exec erd; mv erd.svg public/schema.svg; open http://140.137.207.47/schema.svg; rake db:seed` }
 end

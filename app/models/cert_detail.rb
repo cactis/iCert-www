@@ -23,7 +23,7 @@ class CertDetail < ApplicationRecord
   # end
 
   def BIRTH
-    log self[:BIRTH].to_s, 'birth111'
+    # log self[:BIRTH].to_s, 'birth111'
     if t1 = self[:BIRTH].to_s
       if t2 = t1.split(' ')[0]
         if t = t2.split('-')

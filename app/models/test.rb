@@ -1,11 +1,39 @@
 require 'active_support'
 require 'active_support/deprecation'
 require 'base64'
+
 class Test < User
 
+  @@qrcode_file = "#{Rails.root}/public/uploads/qrcode.png"
 
+  def self.save_cert_qrcode(cert)
+    require 'rqrcode'
+    log cert.validate_url, 'cert.validate_url'
+
+    qrcode = RQRCode::QRCode.new(cert.validate_url)
+    svg = qrcode.as_svg(offset: 0, color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 5)
+    # log svg, 'svg'
+
+    png = qrcode.as_png(
+          resize_gte_to: false,
+          resize_exactly_to: false,
+          fill: 'white',
+          color: 'black',
+          size: 100,
+          border_modules: 4,
+          module_px_size: 2,
+          file: @@qrcode_file
+          )
+    # IO.write(@@qrcode_file, png.to_s)
+
+    return svg, @@qrcode_file
+    # mini_magick_export svg, bg, @@qrcode_file
+  end
 
   def self.export(cert = Cert.first, tempfile)
+
     template = Template.first
     # cert = Cert.first
     # course = cert.course
@@ -17,42 +45,47 @@ class Test < User
     texts = dom.css('svg tspan')
     texts.each do |text|
       express = text.text
-      log express, 'express 111'
+      # log express, 'express 111'
       # course.settings.each do |key, value|
       cert_detail.attributes.each do |key, value|
-        log [key, value]
+        # log [key, value]
         field = '#{' + key + '}'
         # express.gsub!(field, value.to_s)
         express.gsub!(field, eval("cert_detail.#{key}").to_s)
       end
       size = 22
-      log express, 'express 222'
+      # log express, 'express 222'
       result = express.scan(/.{1,#{size}}/)
-      log result, 'result'
+      # log result, 'result'
       result = result.join("\n")
-      log result, 'result  3333'
+      # log result, 'result  3333'
       express = result if result != ""
       svg.gsub! text, express
     end
     # log svg, 'svg'
     images = dom.css('svg image')
-    link = images.first.get_attribute 'xlink:href'
-    # return svg_to_img svg, link, tempfile
-    return mini_magick_export svg, link, tempfile
+    bg = images.first.get_attribute 'xlink:href'
+
+    q_svg, q_file = save_cert_qrcode cert
+    return mini_magick_export svg, q_svg, q_file, bg, tempfile
   end
 
-  def self.mini_magick_export(svg, bg, file)
-    log svg, svg
+  def self.mini_magick_export(svg, qrcode, qrcode_file, bg, file)
+    # log svg, 'svg'
+    # log qrcode, 'qrcode'
+    # log qrcode_file, 'file'
+
     dom = Nokogiri::XML svg
     texts = dom.css('svg text')
-    log texts, 'texts'
-
+    # log texts, 'texts'
+    # bg = qrcode_file
+    log bg, 'bg'
     image = MiniMagick::Image.open(bg)
-    font_index = 0
+
     image.combine_options do |c|
       texts.each do |text|
         tspan = text.css('tspan').first
-        log tspan, 'tspan'
+        # log tspan, 'tspan'
         x = text.get_attribute('x').to_i
         y = text.get_attribute('y').to_i + tspan.get_attribute('dy').to_i# / 2
         # x = x - image.width / 2
@@ -65,11 +98,6 @@ class Test < User
         words = tspan.text
         c.fill 'black'
 
-        # fonts = Settings.fonts.name.split(', ')
-        # font = fonts[font_index]
-        # size = 30
-        # words = "#{font} #{Settings.fonts.labels.split(', ')[font_index]}"
-
 
         # log font, 'font'
         c.font font
@@ -78,58 +106,86 @@ class Test < User
         # c.gravity "center"
         # c.size "#{size}x"
         # log Settings.fonts.labels, 'labels'
-        log [x, y, size, font, words]
+        # log [x, y, size, font, words]
         # c.annotate "#{x}, #{y}", words
         c.draw "text #{x},#{y} '#{words}'"
-
-        font_index = font_index == fonts.size - 1 ? 0 : font_index + 1
       end
+      # c.gravity = "center"
+      # c.draw MiniMagick::Image.open(qrcode_file)
     end
+
+
+    image = image.composite MiniMagick::Image.open(qrcode_file, "png") do |c|
+      c.gravity "SouthEast"
+      # c.x 100
+      # c.y 100
+    end
+    # result.write file
+
+    # image.combine_options do |c|
+    # end
+    # image.write file
+
+    # image = MiniMagick::Image.open(file)
+    # image.combine_options do |c|
+    #   log qrcode_file, 'qrcode_file'
+    #   # a
+    #   qrcode = MiniMagick::Image.open(qrcode_file) do |a|
+    #     a.resize '100x300'
+    #     a.gravity 'center'
+    #     a.fill 'blank'
+    #     c.draw a
+    #   end
+    #   qrcode.write qrcode_file
+    #   log qrcode_file, 'qrcode_file'
+    #   aa
+    # end
+
     image.write file
     file_url = file.gsub('/home/ctslin/www/icert/public', Settings.host)
     log file_url, 'file_url'
     return file_url
   end
 
-  def self.svg_to_img(svg, bg, file)
-    require "rmagick"
-    # svg.gsub!(/^data:image\/(png|jpg|jpeg);base64,/,"")
-    # file = tempfile # "#{Rails.root}/public/uploads/sample.png"
-    # bg_url = "http://140.137.207.47/seeds/CCB5.png"
-    # log svg, 'svg'
-    # svg = Base64.decode64(svg)
-    # log file, 'file'
-    log svg, 'svg'
-    img = Magick::Image.from_blob(svg) {
-      self.format = 'SVG'
-      self.background_color = 'transparent'
-    }
-    canvas = img.first
+  # def self.svg_to_img(svg, bg, file)
+  #   require "rmagick"
+  #   # svg.gsub!(/^data:image\/(png|jpg|jpeg);base64,/,"")
+  #   # file = tempfile # "#{Rails.root}/public/uploads/sample.png"
+  #   # bg_url = "http://140.137.207.47/seeds/CCB5.png"
+  #   # log svg, 'svg'
+  #   # svg = Base64.decode64(svg)
+  #   # log file, 'file'
+  #   log svg, 'svg'
+  #   img = Magick::Image.from_blob(svg) {
+  #     self.format = 'SVG'
+  #     self.background_color = 'transparent'
+  #   }
+  #   canvas = img.first
 
-    # dom = Nokogiri::XML svg
-    # texts = dom.css('svg tspan')
-    # drawing = Magick::Draw.new
-    # position = 80
-    # texts.each do |text|
-    #   text.text.scan("\n").each do |row|
-    #     drawing.annotate(canvas, 0, 0, 200, position += 20, row)
-    #   end
-    # end
-    canvas.to_blob {
-      self.format = 'PNG'
-    }
-    # log file, 'save'
-    canvas.write file
+  #   # dom = Nokogiri::XML svg
+  #   # texts = dom.css('svg tspan')
+  #   # drawing = Magick::Draw.new
+  #   # position = 80
+  #   # texts.each do |text|
+  #   #   text.text.scan("\n").each do |row|
+  #   #     drawing.annotate(canvas, 0, 0, 200, position += 20, row)
+  #   #   end
+  #   # end
+  #   canvas.to_blob {
+  #     self.format = 'PNG'
+  #   }
+  #   # log file, 'save'
+  #   canvas.write file
 
-    image_list = Magick::ImageList.new(bg, file)
-    File.delete file
-    image_list.write file
-    `convert #{Rails.root}/public/uploads/cert-0.png #{Rails.root}/public/uploads/cert-1.png -composite #{file}`
+  #   image_list = Magick::ImageList.new(bg, file)
+  #   File.delete file
+  #   image_list.write file
+  #   `convert #{Rails.root}/public/uploads/cert-0.png #{Rails.root}/public/uploads/cert-1.png -composite #{file}`
 
-    file_url = file.gsub('/home/ctslin/www/icert/public', Settings.host)
-    log file_url, 'file_url'
-    return file_url
-  end
+  #   file_url = file.gsub('/home/ctslin/www/icert/public', Settings.host)
+  #   log file_url, 'file_url'
+  #   return file_url
+  # end
 
 #   def overlay
 #   ruby = Image.read(‘public/images/ruby.jpg’)[0] #This returns an Array! Get the first element.
