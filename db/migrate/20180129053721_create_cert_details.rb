@@ -11,7 +11,6 @@ class CreateCertDetails < ActiveRecord::Migration[5.1]
 
 			# CourseSubject
 
-
 			# User
 			t.string :STUD_ID
 			t.integer :STUD_NO
@@ -21,7 +20,6 @@ class CreateCertDetails < ActiveRecord::Migration[5.1]
 			t.string :SEX
 
 			# CourseUser
-
 			# Subject
 			t.integer :ITEM_POINT
 

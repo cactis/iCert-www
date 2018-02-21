@@ -17,15 +17,15 @@ class Test < User
     # log svg, 'svg'
 
     png = qrcode.as_png(
-          resize_gte_to: false,
-          resize_exactly_to: false,
-          fill: 'white',
-          color: 'black',
-          size: 120,
-          border_modules: 4,
-          module_px_size: 20,
-          file: @@qrcode_file
-          )
+      resize_gte_to: false,
+      resize_exactly_to: false,
+      fill: 'white',
+      color: 'black',
+      size: 120,
+      border_modules: 4,
+      module_px_size: 20,
+      file: @@qrcode_file
+      )
     # IO.write(@@qrcode_file, png.to_s)
 
     return svg, @@qrcode_file
@@ -187,22 +187,22 @@ class Test < User
   #   return file_url
   # end
 
-#   def overlay
-#   ruby = Image.read(‘public/images/ruby.jpg’)[0] #This returns an Array! Get the first element.
-# rails = Image.read(‘public/images/rails.png’)[0]
-# rails_on_ruby = ruby.composite(rails, Magick::EastGravity, 0, 0, Magick::OverCompositeOp) #the 0,0 is the x,y
-# rails_on_ruby.format = ‘jpeg’
-# send_data rails_on_ruby.to_blob, :stream => ‘false’, :filename => ‘test.jpg’, :type => ‘image/jpeg’, :disposition => ‘inline’
-# end
+  #   def overlay
+  #   ruby = Image.read(‘public/images/ruby.jpg’)[0] #This returns an Array! Get the first element.
+  # rails = Image.read(‘public/images/rails.png’)[0]
+  # rails_on_ruby = ruby.composite(rails, Magick::EastGravity, 0, 0, Magick::OverCompositeOp) #the 0,0 is the x,y
+  # rails_on_ruby.format = ‘jpeg’
+  # send_data rails_on_ruby.to_blob, :stream => ‘false’, :filename => ‘test.jpg’, :type => ‘image/jpeg’, :disposition => ‘inline’
+  # end
 
 
 
-def self.run
-  reset_data!
-  3.times.each do |i|
-    user = User.seed! i
-  end
-  log User.count
+  def self.run
+    reset_data!
+    3.times.each do |i|
+      user = User.seed! i
+    end
+    log User.count
     # 一門結束課程
     3.times.each do
       Template.seed!
@@ -370,7 +370,16 @@ def self.run
     svg.to_s
   end
 
-
+  def self.svg_to_img(svg_file)
+    img = Magick::Image.open svg_file {
+      self.format = 'SVG'
+    }
+    canvas = img.frist
+    canvas.to_blob {
+      self.format = 'PNG'
+    }
+    canvas.write "#{Rails.root}/tmp/svg.png"
+  end
 
 end
 
