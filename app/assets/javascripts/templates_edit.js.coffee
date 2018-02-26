@@ -30,7 +30,10 @@ $(document).ready ->
   window.draw = SVG('editor').size(w, h)
   window.preview = SVG('preview').size(w / 2, h).scale(previewScale)
 
-  reloadSVG draw, gon.template.data
+  # reloadSVG draw, gon.template.data
+  # log gon.template.data
+  # log $('#editor').html()
+  reloadSVG draw, $('#data').html()
 
   bindColumnAdd()
   bindExportBtn()
